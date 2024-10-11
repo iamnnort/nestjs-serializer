@@ -1,16 +1,13 @@
 {
   "name": "@iamnnort/nestjs-serializer",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Serialization module for NestJS - Efficient - Flexible - Streamlined",
   "keywords": [
     "nestjs",
     "serialization",
     "deserialization",
     "transform",
-    "data",
-    "json",
     "dto",
-    "typescript",
     "mapping",
     "serializer"
   ],
@@ -33,14 +30,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/iamnnort/nestjs-request.git"
+    "url": "git+https://github.com/iamnnort/nestjs-serializer.git"
   },
   "author": "Nikita Pavets",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/iamnnort/nestjs-request/issues"
+    "url": "https://github.com/iamnnort/nestjs-serializer/issues"
   },
-  "homepage": "https://github.com/iamnnort/nestjs-request#readme",
+  "homepage": "https://github.com/iamnnort/nestjs-serializer#readme",
   "dependencies": {
     "@nestjs/common": "^10.4.4"
   },

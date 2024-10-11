@@ -1,11 +1,11 @@
 ## Info
 
-Request module for NestJS - Simple - Informative - Pretty
+Serialization module for NestJS - Efficient - Flexible - Streamlined
 
 ## Installation
 
 ```bash
-yarn install @iamnnort/nestjs-request
+yarn install @iamnnort/nestjs-serializer
 ```
 
 ## Usage
@@ -13,7 +13,7 @@ yarn install @iamnnort/nestjs-request
 ```javascript
 // app.controller.ts
 import { Controller, Get } from '@nestjs/common';
-import { RequestService } from '@iamnnort/nestjs-request';
+import { RequestService } from '@iamnnort/nestjs-serializer';
 
 @Controller('demo')
 export class AppController {
@@ -27,7 +27,7 @@ export class AppController {
 
 // app.ts
 import { Module } from '@nestjs/common';
-import { RequestModule } from '@iamnnort/nestjs-request';
+import { RequestModule } from '@iamnnort/nestjs-serializer';
 import { AppController } from './app.controller';
 
 @Module({

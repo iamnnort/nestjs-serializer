@@ -8,4 +8,4 @@
 
 ## Reporting a Vulnerability
 
-For issues related to `@iamnnort/nestjs-request` security please email the module maintainers. Their email addresses are available via `npm owner ls @iamnnort/nestjs-request`.
+For issues related to `@iamnnort/nestjs-serializer` security please email the module maintainers. Their email addresses are available via `npm owner ls @iamnnort/nestjs-serializer`.
