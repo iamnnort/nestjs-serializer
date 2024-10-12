@@ -1,6 +1,6 @@
 {
   "name": "@iamnnort/nestjs-serializer",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Serialization module for NestJS - Efficient - Flexible - Streamlined",
   "keywords": [
     "nestjs",
@@ -39,7 +39,9 @@
   },
   "homepage": "https://github.com/iamnnort/nestjs-serializer#readme",
   "dependencies": {
-    "@nestjs/common": "^10.4.4"
+    "@iamnnort/nestjs-logger": "^1.2.2",
+    "@nestjs/common": "^10.4.4",
+    "lodash": "^4.17.21"
   },
   "devDependencies": {
     "@nestjs/core": "^10.4.4",
@@ -47,6 +49,7 @@
     "@swc/core": "^1.7.35",
     "@tsconfig/node18": "^18.2.4",
     "@types/express": "^5.0.0",
+    "@types/lodash": "^4.17.10",
     "@typescript-eslint/parser": "^8.8.1",
     "eslint": "^9.12.0",
     "eslint-config-prettier": "^9.1.0",
