@@ -33,13 +33,13 @@ export class Model {
   }
 }
 
-// user.ts
+// city.ts
 
 import { SerializeField } from '@iamnnort/nestjs-serializer';
 import { Model } from './model';
 import { Scopes } from './types';
 
-export class User extends Model {
+export class City extends Model {
   @SerializeField([{ scopes: [Scopes.FULL] }])
   name: string;
 
@@ -50,20 +50,50 @@ export class User extends Model {
   }
 }
 
+// user.ts
+
+import { SerializeField, SerializeRelation } from '@iamnnort/nestjs-serializer';
+import { City } from './city';
+import { Model } from './model';
+import { Scopes } from './types';
+
+export class User extends Model {
+  @SerializeField([{ scopes: [Scopes.FULL] }])
+  name: string;
+
+  @SerializeRelation([{ scopes: [Scopes.FULL], relationScopes: [Scopes.BASE, Scopes.FULL] }])
+  city: City;
+
+  constructor(dto: { id: number; name: string; city: City }) {
+    super(dto);
+
+    this.name = dto.name;
+    this.city = dto.city;
+  }
+}
+
 // controller.ts
+
 import { Controller, Get, UseInterceptors } from '@nestjs/common';
 import { SerializerInterceptor } from '@iamnnort/nestjs-serializer';
 import { User } from './user';
 import { Scopes } from './types';
+import { City } from './city';
 
 @Controller()
 export class AppController {
   @Get()
   @UseInterceptors(SerializerInterceptor([Scopes.BASE]))
   search() {
+    const city = new City({
+      id: 1,
+      name: 'London',
+    });
+
     const user = new User({
       id: 1,
       name: 'John',
+      city,
     });
 
     return [user];
@@ -72,16 +102,24 @@ export class AppController {
   @Get(':id')
   @UseInterceptors(SerializerInterceptor([Scopes.BASE, Scopes.FULL]))
   get() {
+    const city = new City({
+      id: 1,
+      name: 'London',
+    });
+
     const user = new User({
       id: 1,
       name: 'John',
+      city,
     });
 
     return user;
   }
 }
 
+
 // module.ts
+
 import { Module } from '@nestjs/common';
 import { LoggerModule } from '@iamnnort/nestjs-logger';
 import { SerializerModule } from '@iamnnort/nestjs-serializer';
@@ -100,6 +138,7 @@ import { AppController } from './controller';
 export class AppModule {}
 
 // index.ts
+
 import { NestFactory } from '@nestjs/core';
 import { LoggerService } from '@iamnnort/nestjs-logger';
 import { AppModule } from './module';
@@ -125,7 +164,7 @@ bootstrap();
 [System] [Request] GET /
 [System] [Response] GET / 200 OK [{ id: 1 }]
 [System] [Request] GET /1
-[System] [Response] GET /1 200 OK [{ id: 1, name: "John" }]
+[System] [Response] GET /1 200 OK [{ id: 1, name: "John", city: { id: 1, name: "London" } }]
 ```
 
 ## License
