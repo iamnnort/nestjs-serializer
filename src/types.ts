@@ -1,6 +1,6 @@
 declare global {
   // eslint-disable-next-line no-var
-  var transformFieldConfigs: {
+  var serializerFieldConfigs: {
     scopes: string[];
     relationScopes?: string[];
     // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type

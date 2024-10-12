@@ -1,4 +1,4 @@
-global.transformFieldConfigs = [];
+global.serializerFieldConfigs = [];
 
 export const SerializeField = (
   configs: {
@@ -8,7 +8,7 @@ export const SerializeField = (
 ) => {
   return (target: object, name: string) => {
     configs.forEach((config) => {
-      global.transformFieldConfigs.push({
+      global.serializerFieldConfigs.push({
         scopes: config.scopes,
         target: target.constructor,
         name,
@@ -28,7 +28,7 @@ export const SerializeRelation = (
 ) => {
   return (target: object, name: string) => {
     configs.forEach((config) => {
-      global.transformFieldConfigs.push({
+      global.serializerFieldConfigs.push({
         scopes: config.scopes,
         relationScopes: config.relationScopes,
         target: target.constructor,

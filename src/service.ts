@@ -51,7 +51,7 @@ export class SerializerService {
       return entity;
     }
 
-    const transformFieldConfigs = global.transformFieldConfigs.filter((fieldConfig) => {
+    const serializerFieldConfigs = global.serializerFieldConfigs.filter((fieldConfig) => {
       const isTarget = fieldConfig.target === entity.constructor;
 
       if (!isTarget) {
@@ -72,7 +72,7 @@ export class SerializerService {
     let transformedEntity = {} as any;
 
     await Promise.all(
-      transformFieldConfigs.map(async (fieldConfig) => {
+      serializerFieldConfigs.map(async (fieldConfig) => {
         const fieldName = fieldConfig.fieldName || fieldConfig.name;
         let fieldValue = await entity[fieldConfig.name];
 
