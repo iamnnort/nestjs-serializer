@@ -74,8 +74,8 @@ export class User extends Model {
 
 // controller.ts
 
-import { Controller, Get, UseInterceptors } from '@nestjs/common';
-import { SerializerInterceptor } from '@iamnnort/nestjs-serializer';
+import { Controller, Get, Post, UseInterceptors } from '@nestjs/common';
+import { SerializerIdInterceptor, SerializerInterceptor } from '@iamnnort/nestjs-serializer';
 import { User } from './user';
 import { Scopes } from './types';
 import { City } from './city';
@@ -83,7 +83,7 @@ import { City } from './city';
 @Controller()
 export class AppController {
   @Get()
-  @UseInterceptors(SerializerInterceptor([Scopes.BASE]))
+  @UseInterceptors(SerializerInterceptor({ scopes: [Scopes.BASE] }))
   search() {
     const city = new City({
       id: 1,
@@ -100,8 +100,25 @@ export class AppController {
   }
 
   @Get(':id')
-  @UseInterceptors(SerializerInterceptor([Scopes.BASE, Scopes.FULL]))
+  @UseInterceptors(SerializerInterceptor({ scopes: [Scopes.BASE, Scopes.FULL] }))
   get() {
+    const city = new City({
+      id: 1,
+      name: 'London',
+    });
+
+    const user = new User({
+      id: 1,
+      name: 'John',
+      city,
+    });
+
+    return user;
+  }
+
+  @Post()
+  @UseInterceptors(SerializerIdInterceptor)
+  create() {
     const city = new City({
       id: 1,
       name: 'London',
@@ -164,6 +181,8 @@ bootstrap();
 [System] [Response] GET / 200 OK [{ id: 1 }]
 [System] [Request] GET /1
 [System] [Response] GET /1 200 OK [{ id: 1, name: "John", city: { id: 1, name: "London" } }]
+[System] [Request] POST /1
+[System] [Response] POST /1 201 Created { id: 1 }
 ```
 
 ## License

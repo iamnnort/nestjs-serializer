@@ -14,7 +14,7 @@ export class SerializerService {
     this.globalEntityNames = config.globalEntityNames || [];
   }
 
-  async transform(response: any, scopes: string[]) {
+  async transform(response: any, scopes?: string[]) {
     if (!scopes) {
       return response;
     }
