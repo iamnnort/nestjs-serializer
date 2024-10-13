@@ -47,7 +47,6 @@ export class SerializerService {
   }
 
   async transformEntity(entity: any, scopes: string[] = []) {
-    console.log('1', entity);
     if (!entity) {
       return entity;
     }
@@ -69,8 +68,6 @@ export class SerializerService {
 
       return isScope;
     });
-
-    console.log('2', serializerFieldConfigs);
 
     let transformedEntity = {} as any;
 
