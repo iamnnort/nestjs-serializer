@@ -1,4 +1,4 @@
-import { flattenDeep, isArray, isFunction, isNil, isPlainObject, merge, set, uniq } from 'lodash';
+import { flattenDeep, isArray, isFunction, isNil, isPlainObject, merge, pick, set, uniq } from 'lodash';
 import { Inject, Injectable } from '@nestjs/common';
 import { MODULE_OPTIONS_TOKEN } from './module-definition';
 import type { SerializerConfig } from './types';
@@ -14,15 +14,15 @@ export class SerializerService {
     this.globalEntityNames = config.globalEntityNames || [];
   }
 
-  async transform(response: any, scopes?: string[]) {
-    if (!scopes) {
+  async transform(response: any, config: { scopes?: string[]; fields?: string[] }) {
+    if (!config.scopes && !config.fields) {
       return response;
     }
 
     if (!isNil(response.pagination) && !isNil(response.data)) {
       const transformedData = await Promise.all(
         response.data.map((entity) => {
-          return this.transformEntity(entity, scopes);
+          return this.transformEntity(entity, config);
         }),
       );
 
@@ -34,21 +34,29 @@ export class SerializerService {
     if (isArray(response)) {
       const transformedEntities = await Promise.all(
         response.map((entity) => {
-          return this.transformEntity(entity, scopes);
+          return this.transformEntity(entity, config);
         }),
       );
 
       return transformedEntities;
     }
 
-    const transformedEntity = await this.transformEntity(response, scopes);
+    const transformedEntity = await this.transformEntity(response, config);
 
     return transformedEntity;
   }
 
-  async transformEntity(entity: any, scopes: string[] = []) {
+  async transformEntity(entity: any, config: { scopes?: string[]; fields?: string[] }) {
     if (!entity) {
       return entity;
+    }
+
+    if (!config.scopes && !config.fields) {
+      return entity;
+    }
+
+    if (config.fields) {
+      return pick(entity, config.fields);
     }
 
     const serializerFieldConfigs = global.serializerFieldConfigs.filter((fieldConfig) => {
@@ -63,7 +71,11 @@ export class SerializerService {
       }
 
       const isScope = fieldConfig.scopes.some((scope) => {
-        return scopes.includes(scope);
+        if (!config.scopes) {
+          return false;
+        }
+
+        return config.scopes.includes(scope);
       });
 
       return isScope;
@@ -80,7 +92,9 @@ export class SerializerService {
           if (isArray(fieldValue)) {
             fieldValue = await Promise.all(
               fieldValue.map(async (relationEntity) => {
-                let relationEntityFieldValue = await this.transformEntity(relationEntity, fieldConfig.relationScopes);
+                let relationEntityFieldValue = await this.transformEntity(relationEntity, {
+                  scopes: fieldConfig.relationScopes,
+                });
 
                 if (isFunction(fieldConfig.fieldTransform)) {
                   relationEntityFieldValue = await fieldConfig.fieldTransform(relationEntityFieldValue);
@@ -90,7 +104,9 @@ export class SerializerService {
               }),
             );
           } else {
-            fieldValue = await this.transformEntity(fieldValue, fieldConfig.relationScopes);
+            fieldValue = await this.transformEntity(fieldValue, {
+              scopes: fieldConfig.relationScopes,
+            });
 
             if (isFunction(fieldConfig.fieldTransform)) {
               fieldValue = await fieldConfig.fieldTransform(fieldValue);
@@ -113,7 +129,9 @@ export class SerializerService {
         Object.keys(entity.relatedScope).map(async (relaitedEntityKey) => {
           const relaitedEntity = entity.relatedScope[relaitedEntityKey];
 
-          transformedRelatedScope[relaitedEntityKey] = await this.transformEntity(relaitedEntity, scopes);
+          transformedRelatedScope[relaitedEntityKey] = await this.transformEntity(relaitedEntity, {
+            scopes: config.scopes,
+          });
         }),
       );
 

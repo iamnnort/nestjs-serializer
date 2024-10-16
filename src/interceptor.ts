@@ -21,7 +21,10 @@ export const SerializerInterceptor = (config: { scopes?: string[]; extendedScope
           }
 
           if (scopes) {
-            return this.serializerService.transform(response, scopes);
+            return this.serializerService.transform(response, {
+              scopes,
+              fields: config.fields,
+            });
           }
 
           return response;
