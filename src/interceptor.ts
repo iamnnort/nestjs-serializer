@@ -2,7 +2,6 @@ import { NestInterceptor, ExecutionContext, CallHandler, Injectable } from '@nes
 import { map } from 'rxjs/operators';
 import { Request } from 'express';
 import { SerializerService } from './service';
-import { pick } from 'lodash';
 
 export const SerializerInterceptor = (config: { scopes?: string[]; extendedScopes?: string[]; fields?: string[] }) => {
   @Injectable()
@@ -16,18 +15,14 @@ export const SerializerInterceptor = (config: { scopes?: string[]; extendedScope
         map(async (responsePromise) => {
           const response = await responsePromise;
 
-          if (config.fields) {
-            return pick(response, config.fields);
+          if (!scopes && !config.fields) {
+            return response;
           }
 
-          if (scopes) {
-            return this.serializerService.transform(response, {
-              scopes,
-              fields: config.fields,
-            });
-          }
-
-          return response;
+          return this.serializerService.transform(response, {
+            scopes,
+            fields: config.fields,
+          });
         }),
       );
     }
