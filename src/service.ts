@@ -15,6 +15,10 @@ export class SerializerService {
   }
 
   async transform(response: any, config: { scopes?: string[]; fields?: string[] }) {
+    if (!response) {
+      return response;
+    }
+
     if (!config.scopes && !config.fields) {
       return response;
     }
