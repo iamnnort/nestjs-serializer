@@ -1,7 +1,7 @@
 import { flattenDeep, isArray, isFunction, isNil, isPlainObject, merge, pick, set, uniq } from 'lodash';
 import { Inject, Injectable } from '@nestjs/common';
 import { MODULE_OPTIONS_TOKEN } from './module-definition';
-import type { SerializerConfig } from './types';
+import type { SerializerConfig, SerializerFieldConfig } from './types';
 
 @Injectable()
 export class SerializerService {
@@ -50,6 +50,28 @@ export class SerializerService {
     return transformedEntity;
   }
 
+  async transformRelationEntity(fieldValue: any, fieldConfig: SerializerFieldConfig) {
+    const fieldTransform = isFunction(fieldConfig.fieldTransform) ? fieldConfig.fieldTransform : (_) => _;
+
+    if (isArray(fieldValue)) {
+      return fieldTransform(
+        await Promise.all(
+          fieldValue.map(async (relationEntity) => {
+            return this.transformEntity(relationEntity, {
+              scopes: fieldConfig.relationScopes,
+            });
+          }),
+        ),
+      );
+    }
+
+    return fieldTransform(
+      await this.transformEntity(fieldValue, {
+        scopes: fieldConfig.relationScopes,
+      }),
+    );
+  }
+
   async transformEntity(entity: any, config: { scopes?: string[]; fields?: string[] }) {
     if (!entity) {
       return entity;
@@ -93,29 +115,7 @@ export class SerializerService {
         let fieldValue = await entity[fieldConfig.name];
 
         if (!isNil(fieldConfig.relationScopes)) {
-          if (isArray(fieldValue)) {
-            fieldValue = await Promise.all(
-              fieldValue.map(async (relationEntity) => {
-                let relationEntityFieldValue = await this.transformEntity(relationEntity, {
-                  scopes: fieldConfig.relationScopes,
-                });
-
-                if (isFunction(fieldConfig.fieldTransform)) {
-                  relationEntityFieldValue = await fieldConfig.fieldTransform(relationEntityFieldValue);
-                }
-
-                return relationEntityFieldValue;
-              }),
-            );
-          } else {
-            fieldValue = await this.transformEntity(fieldValue, {
-              scopes: fieldConfig.relationScopes,
-            });
-
-            if (isFunction(fieldConfig.fieldTransform)) {
-              fieldValue = await fieldConfig.fieldTransform(fieldValue);
-            }
-          }
+          fieldValue = await this.transformRelationEntity(fieldValue, fieldConfig);
         } else {
           if (isFunction(fieldConfig.fieldTransform)) {
             fieldValue = await fieldConfig.fieldTransform(fieldValue);
