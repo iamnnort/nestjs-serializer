@@ -23,7 +23,7 @@ export const SerializeRelation = (
     scopes: string[];
     relationScopes: string[];
     fieldName?: string;
-    fieldTransform?: (entity: any) => Promise<any>;
+    fieldTransform?: (entity: any) => any | Promise<any>;
   }[],
 ) => {
   return (target: object, name: string) => {

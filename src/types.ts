@@ -10,7 +10,7 @@ export type SerializerFieldConfig = {
   target: Function;
   name: string;
   fieldName?: string;
-  fieldTransform?: (entity: any) => Promise<any>;
+  fieldTransform?: (entity: any) => any | Promise<any>;
 };
 
 export type SerializerConfig = {
