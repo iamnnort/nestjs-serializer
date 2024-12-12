@@ -210,13 +210,12 @@
   resolved "https://registry.yarnpkg.com/@humanwhocodes/retry/-/retry-0.3.1.tgz#c72a5c76a9fbaf3488e231b13dc52c0da7bab42a"
   integrity sha512-JBxkERygn7Bv/GbN5Rv8Ul6LVknS+5Bp6RgDC/O8gEBU/yeH5Ui5C/OlWrTb6qct7LjjfT6Re2NxB0ln0yYybA==
 
-"@iamnnort/nestjs-logger@^1.2.2":
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/@iamnnort/nestjs-logger/-/nestjs-logger-1.2.2.tgz#2b2e8edafa3788e4ef01afc597cadaf9f23f8275"
-  integrity sha512-+HqzKoq1VooZJlQ1jxo/p9d8n+K8OET2KAhMDOM0kKCWL+YBmiLNVRZefsNk6ugHuZ47CnxXUOorbThcSX8KLg==
+"@iamnnort/nestjs-logger@^1.2.6":
+  version "1.2.6"
+  resolved "https://registry.yarnpkg.com/@iamnnort/nestjs-logger/-/nestjs-logger-1.2.6.tgz#53e9d1eead4724923695b34adaf23affdfc8b465"
+  integrity sha512-XI0zMeBK9zxU+VeWbGay732r+YqfOkBam7cxBer3UrF97gfPTwc+l7mQSBdLgEpi1AuJAVb4BBV5j5XVOooCyg==
   dependencies:
     "@nestjs/common" "^10.4.4"
-    "@types/node" "^22.7.5"
     axios "^1.7.7"
     qs "^6.13.0"
 
@@ -590,7 +589,7 @@
   resolved "https://registry.yarnpkg.com/@types/mime/-/mime-1.3.5.tgz#1ef302e01cf7d2b5a0fa526790c9123bf1d06690"
   integrity sha512-/pyBZWSLD2n0dcHE3hq8s8ZvcETHtEuF+3E7XVt0Ig2nvsVQXdghHVcEkIWjy9A0wKfTn97a/PSDYohKIlnP/w==
 
-"@types/node@*", "@types/node@^22.7.5":
+"@types/node@*":
   version "22.7.5"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-22.7.5.tgz#cfde981727a7ab3611a481510b473ae54442b92b"
   integrity sha512-jML7s2NAzMWc//QSJ1a3prpk78cOPchGvXJsC3C6R6PSMoooztvRVQEz89gmBTBY1SPMaqo5teB4uNHPdetShQ==
