@@ -1,6 +1,6 @@
 {
   "name": "@iamnnort/nestjs-serializer",
-  "version": "1.1.10",
+  "version": "1.1.12",
   "description": "Serialization module for NestJS - Efficient - Flexible - Streamlined",
   "keywords": [
     "nestjs",
