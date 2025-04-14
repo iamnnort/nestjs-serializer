@@ -1,6 +1,6 @@
 {
   "name": "@iamnnort/nestjs-serializer",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Serialization module for NestJS - Efficient - Flexible - Streamlined",
   "keywords": [
     "nestjs",
@@ -43,7 +43,7 @@
     "lodash": "^4.17.21"
   },
   "devDependencies": {
-    "@iamnnort/nestjs-logger": "^1.4.1",
+    "@iamnnort/nestjs-logger": "^1.4.2",
     "@nestjs/core": "^11.0.16",
     "@nestjs/platform-express": "^11.0.16",
     "@swc/core": "^1.11.20",

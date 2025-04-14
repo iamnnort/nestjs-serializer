@@ -240,13 +240,14 @@
   resolved "https://registry.yarnpkg.com/@humanwhocodes/retry/-/retry-0.4.2.tgz#1860473de7dfa1546767448f333db80cb0ff2161"
   integrity sha512-xeO57FpIu4p1Ri3Jq/EXq4ClRm86dVF2z/+kvFnyqVYRavTZmaFaUBbWCOuuTh0o/g7DSsk6kc2vrS4Vl5oPOQ==
 
-"@iamnnort/nestjs-logger@^1.4.1":
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/@iamnnort/nestjs-logger/-/nestjs-logger-1.4.1.tgz#26823194f36d018e3cdf90e9e0854cc76f71aef0"
-  integrity sha512-9f/DNdMQOqJEiL+GrszP5DHyOGGCjvg3DyrDyWl+6g1vL++A0+bpc4bkQ6NfLhe069P1q2f2jcFmyBSwA8Dy0w==
+"@iamnnort/nestjs-logger@^1.4.2":
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/@iamnnort/nestjs-logger/-/nestjs-logger-1.4.2.tgz#7987914aad1eff91fecc2061ff0d572f345ae4c9"
+  integrity sha512-0m/Nc+c6vbuqnbJwko05gTjviwdok16dNQ4N6cmvBk1XEXQtxPvftwreT9V3C238VN9DX+VcNLxBF/1wlmy/vw==
   dependencies:
     "@nestjs/common" "^11.0.12"
     axios "^1.8.4"
+    lodash "^4.17.21"
     qs "^6.14.0"
 
 "@isaacs/cliui@^8.0.2":

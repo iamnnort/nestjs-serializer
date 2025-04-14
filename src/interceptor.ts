@@ -3,7 +3,12 @@ import { map } from 'rxjs/operators';
 import { Request } from 'express';
 import { SerializerService } from './service';
 
-export const SerializerInterceptor = (config: { scopes?: string[]; extendedScopes?: string[]; fields?: string[] }) => {
+export const SerializerInterceptor = (config: {
+  scopes?: string[];
+  extendedScopes?: string[];
+  limitedScopes?: string[];
+  fields?: string[];
+}) => {
   @Injectable()
   class SerializerInterceptor implements NestInterceptor {
     constructor(public serializerService: SerializerService) {}
@@ -32,6 +37,10 @@ export const SerializerInterceptor = (config: { scopes?: string[]; extendedScope
 
       if (request.query.extended) {
         return config.extendedScopes || config.scopes;
+      }
+
+      if (request.query.limited) {
+        return config.limitedScopes || config.scopes;
       }
 
       return config.scopes;
