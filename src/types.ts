@@ -15,4 +15,5 @@ export type SerializerFieldConfig = {
 
 export type SerializerConfig = {
   globalEntityNames?: string[];
+  globalLimitedScopes?: string[];
 };

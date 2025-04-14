@@ -5,14 +5,7 @@ import type { SerializerConfig, SerializerFieldConfig } from './types';
 
 @Injectable()
 export class SerializerService {
-  globalEntityNames: string[];
-
-  constructor(
-    @Inject(MODULE_OPTIONS_TOKEN)
-    public config: SerializerConfig,
-  ) {
-    this.globalEntityNames = config.globalEntityNames || [];
-  }
+  constructor(@Inject(MODULE_OPTIONS_TOKEN) public config: SerializerConfig) {}
 
   async transform(response: any, config: { scopes?: string[]; fields?: string[] }) {
     if (!response) {
@@ -89,7 +82,7 @@ export class SerializerService {
       const isTarget = fieldConfig.target === entity.constructor;
 
       if (!isTarget) {
-        const isGlobalTarget = this.globalEntityNames.includes(fieldConfig.target.name);
+        const isGlobalTarget = (this.config.globalEntityNames || []).includes(fieldConfig.target.name);
 
         if (!isGlobalTarget) {
           return false;

@@ -40,7 +40,7 @@ export const SerializerInterceptor = (config: {
       }
 
       if (request.query.limited) {
-        return config.limitedScopes || config.scopes;
+        return config.limitedScopes || this.serializerService.config.globalLimitedScopes || config.scopes;
       }
 
       return config.scopes;
