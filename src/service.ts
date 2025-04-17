@@ -119,6 +119,33 @@ export class SerializerService {
       }),
     );
 
+    // calculate number of remapped fields per root field
+    const fieldCountMap = serializerFieldConfigs.reduce<{ [key: string]: number }>((fieldCountMap, fieldConfig) => {
+      const fieldName = fieldConfig.fieldName || fieldConfig.name;
+      const rootFieldName = fieldName.split('.')[0];
+
+      return {
+        ...fieldCountMap,
+        [rootFieldName]: isNil(fieldCountMap[rootFieldName]) ? 1 : fieldCountMap[rootFieldName] + 1,
+      };
+    }, {});
+
+    // remove root fields which have only remapped fields
+    Object.entries(transformedEntity).forEach(([rootFieldName, rootFieldValue]) => {
+      if (!isPlainObject(rootFieldValue)) {
+        return;
+      }
+
+      const rootFieldCount = fieldCountMap[rootFieldName];
+      const rootFieldChildrenCount = Object.keys(rootFieldValue as any).length;
+
+      if (rootFieldCount < rootFieldChildrenCount) {
+        return;
+      }
+
+      transformedEntity[rootFieldName] = undefined;
+    });
+
     if (isPlainObject(entity.relatedScope)) {
       const transformedRelatedScope = {};
 
