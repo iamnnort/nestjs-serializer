@@ -143,7 +143,7 @@ export class SerializerService {
         return;
       }
 
-      transformedEntity[rootFieldName] = undefined;
+      transformedEntity[rootFieldName] = null;
     });
 
     if (isPlainObject(entity.relatedScope)) {
