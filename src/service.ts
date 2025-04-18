@@ -122,6 +122,11 @@ export class SerializerService {
     // calculate number of remapped fields per root field
     const fieldCountMap = serializerFieldConfigs.reduce<{ [key: string]: number }>((fieldCountMap, fieldConfig) => {
       const fieldName = fieldConfig.fieldName || fieldConfig.name;
+
+      if (!fieldName.includes('.')) {
+        return fieldCountMap;
+      }
+
       const rootFieldName = fieldName.split('.')[0];
 
       return {
@@ -138,6 +143,10 @@ export class SerializerService {
 
       const rootFieldCount = fieldCountMap[rootFieldName];
       const rootFieldChildrenCount = Object.keys(rootFieldValue as any).length;
+
+      if (!rootFieldCount) {
+        return;
+      }
 
       if (rootFieldCount < rootFieldChildrenCount) {
         return;
