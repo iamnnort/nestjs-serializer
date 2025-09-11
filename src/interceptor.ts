@@ -7,6 +7,7 @@ export const SerializerInterceptor = (config: {
   scopes?: string[];
   extendedScopes?: string[];
   limitedScopes?: string[];
+  secretScopes?: string[];
   fields?: string[];
 }) => {
   @Injectable()
@@ -41,6 +42,10 @@ export const SerializerInterceptor = (config: {
 
       if (request.query.limited) {
         return config.limitedScopes || this.serializerService.config.globalLimitedScopes || config.scopes;
+      }
+
+      if (request.query.secret) {
+        return config.secretScopes || this.serializerService.config.globalSecretScopes || config.scopes;
       }
 
       return config.scopes;
