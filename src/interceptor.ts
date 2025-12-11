@@ -2,12 +2,14 @@ import { NestInterceptor, ExecutionContext, CallHandler, Injectable } from '@nes
 import { map } from 'rxjs/operators';
 import { Request } from 'express';
 import { SerializerService } from './service';
+import { intersection } from 'lodash';
 
 export const SerializerInterceptor = (config: {
   scopes?: string[];
   extendedScopes?: string[];
   limitedScopes?: string[];
   secretScopes?: string[];
+  allowedScopes?: string[];
   fields?: string[];
 }) => {
   @Injectable()
@@ -46,6 +48,10 @@ export const SerializerInterceptor = (config: {
 
       if (request.query.secret) {
         return config.secretScopes || this.serializerService.config.globalSecretScopes || config.scopes;
+      }
+
+      if (request.query.scopes && config.allowedScopes) {
+        return intersection(request.query.scopes as string[], config.allowedScopes);
       }
 
       return config.scopes;
