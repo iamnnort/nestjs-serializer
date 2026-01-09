@@ -17,7 +17,11 @@ export const SerializerInterceptor = (config: {
     constructor(public serializerService: SerializerService) {}
 
     intercept(ctx: ExecutionContext, next: CallHandler<Promise<any>>) {
+      const request = ctx.switchToHttp().getRequest<Request>();
+
       const scopes = this.getScopes(ctx);
+
+      request.query.scopes = scopes;
 
       return next.handle().pipe(
         map(async (responsePromise) => {
