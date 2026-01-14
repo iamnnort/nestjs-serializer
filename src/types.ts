@@ -18,3 +18,7 @@ export type SerializerConfig = {
   globalLimitedScopes?: string[];
   globalSecretScopes?: string[];
 };
+
+export type SerializerRequest = Request & {
+  scopes?: string[];
+};

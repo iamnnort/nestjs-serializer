@@ -1,3 +1,6 @@
+import { createParamDecorator, ExecutionContext } from '@nestjs/common';
+import { SerializerRequest } from './types';
+
 global.serializerFieldConfigs = [];
 
 export const SerializeField = (
@@ -39,3 +42,9 @@ export const SerializeRelation = (
     });
   };
 };
+
+export const SerializerQuery = createParamDecorator((data: unknown, ctx: ExecutionContext) => {
+  const request = ctx.switchToHttp().getRequest<SerializerRequest>();
+
+  return request.scopes;
+});

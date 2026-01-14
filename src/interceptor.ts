@@ -3,6 +3,7 @@ import { map } from 'rxjs/operators';
 import { Request } from 'express';
 import { SerializerService } from './service';
 import { intersection } from 'lodash';
+import { SerializerRequest } from './types';
 
 export const SerializerInterceptor = (config: {
   scopes?: string[];
@@ -17,22 +18,20 @@ export const SerializerInterceptor = (config: {
     constructor(public serializerService: SerializerService) {}
 
     intercept(ctx: ExecutionContext, next: CallHandler<Promise<any>>) {
-      const request = ctx.switchToHttp().getRequest<Request>();
+      const request = ctx.switchToHttp().getRequest<SerializerRequest>();
 
-      const scopes = this.getScopes(ctx);
-
-      request.query.scopes = scopes;
+      request.scopes = this.getScopes(ctx);
 
       return next.handle().pipe(
         map(async (responsePromise) => {
           const response = await responsePromise;
 
-          if (!scopes && !config.fields) {
+          if (!request.scopes && !config.fields) {
             return response;
           }
 
           return this.serializerService.transform(response, {
-            scopes,
+            scopes: request.scopes,
             fields: config.fields,
           });
         }),
@@ -42,15 +41,15 @@ export const SerializerInterceptor = (config: {
     getScopes(ctx: ExecutionContext) {
       const request = ctx.switchToHttp().getRequest<Request>();
 
-      if (request.query.extended) {
+      if (request.query.extended === 'true') {
         return config.extendedScopes || config.scopes;
       }
 
-      if (request.query.limited) {
+      if (request.query.limited === 'true') {
         return config.limitedScopes || this.serializerService.config.globalLimitedScopes || config.scopes;
       }
 
-      if (request.query.secret) {
+      if (request.query.secret === 'true') {
         return config.secretScopes || this.serializerService.config.globalSecretScopes || config.scopes;
       }
 
