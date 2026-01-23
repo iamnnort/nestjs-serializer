@@ -7,6 +7,7 @@ export const SerializeField = (
   configs: {
     scopes: string[];
     fieldName?: string;
+    fieldTransform?: (entity: any) => any | Promise<any>;
   }[],
 ) => {
   return (target: object, name: string) => {
@@ -16,6 +17,7 @@ export const SerializeField = (
         target: target.constructor,
         name,
         fieldName: config.fieldName,
+        fieldTransform: config.fieldTransform,
       });
     });
   };
