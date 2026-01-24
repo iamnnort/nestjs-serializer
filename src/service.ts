@@ -43,7 +43,7 @@ export class SerializerService {
     return transformedEntity;
   }
 
-  async transformRelationEntity(fieldValue: any, fieldConfig: SerializerFieldConfig) {
+  async transformRelationEntity(fieldValue: any, fieldConfig: SerializerFieldConfig, entity: any) {
     const fieldTransform = isFunction(fieldConfig.fieldTransform) ? fieldConfig.fieldTransform : (_) => _;
 
     if (isArray(fieldValue)) {
@@ -55,6 +55,7 @@ export class SerializerService {
             });
           }),
         ),
+        entity,
       );
     }
 
@@ -62,6 +63,7 @@ export class SerializerService {
       await this.transformEntity(fieldValue, {
         scopes: fieldConfig.relationScopes,
       }),
+      entity,
     );
   }
 
@@ -108,10 +110,10 @@ export class SerializerService {
         let fieldValue = await entity[fieldConfig.name];
 
         if (!isNil(fieldConfig.relationScopes)) {
-          fieldValue = await this.transformRelationEntity(fieldValue, fieldConfig);
+          fieldValue = await this.transformRelationEntity(fieldValue, fieldConfig, entity);
         } else {
           if (isFunction(fieldConfig.fieldTransform)) {
-            fieldValue = await fieldConfig.fieldTransform(fieldValue);
+            fieldValue = await fieldConfig.fieldTransform(fieldValue, entity);
           }
         }
 
