@@ -41,12 +41,12 @@ export const SerializerInterceptor = (config: {
     getScopes(ctx: ExecutionContext) {
       const request = ctx.switchToHttp().getRequest<Request>();
 
-      if (request.query.extended === 'true') {
-        return config.extendedScopes || config.scopes;
-      }
-
       if (request.query.limited === 'true') {
         return config.limitedScopes || this.serializerService.config.globalLimitedScopes || config.scopes;
+      }
+
+      if (request.query.extended === 'true') {
+        return config.extendedScopes || config.scopes;
       }
 
       if (request.query.secret === 'true') {
