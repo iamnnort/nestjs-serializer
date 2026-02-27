@@ -20,7 +20,7 @@ export const SerializerInterceptor = (config: {
     intercept(ctx: ExecutionContext, next: CallHandler<Promise<any>>) {
       const request = ctx.switchToHttp().getRequest<SerializerRequest>();
 
-      request.scopes = this.withQueryScopes(ctx, this.withSecretScopes(ctx, this.getScopes(ctx)));
+      request.scopes = this.getScopes(ctx);
 
       return next.handle().pipe(
         map(async (responsePromise) => {
@@ -47,20 +47,20 @@ export const SerializerInterceptor = (config: {
         return config.limitedScopes || this.serializerService.config.globalLimitedScopes || scopes;
       }
 
-      if (request.query.extended === 'true') {
-        return config.extendedScopes || scopes;
+      if (request.query.scopes && config.allowedScopes) {
+        return intersection(request.query.scopes as string[], config.allowedScopes);
       }
 
-      return scopes;
+      return this.withSecretScopes(ctx, this.withExtendedScopes(ctx, scopes));
     }
 
-    withQueryScopes(ctx: ExecutionContext, scopes: string[]) {
+    withExtendedScopes(ctx: ExecutionContext, scopes: string[]) {
       const request = ctx.switchToHttp().getRequest<Request>();
 
-      if (request.query.scopes && config.allowedScopes) {
-        const queryScopes = intersection(request.query.scopes as string[], config.allowedScopes);
+      if (request.query.extended === 'true') {
+        const extendedScopes = config.extendedScopes || [];
 
-        return uniq([...scopes, ...queryScopes]);
+        return uniq([...scopes, ...extendedScopes]);
       }
 
       return scopes;
