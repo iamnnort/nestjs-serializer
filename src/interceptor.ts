@@ -38,7 +38,7 @@ export const SerializerInterceptor = (config: {
       );
     }
 
-    private getScopes(ctx: ExecutionContext) {
+    getScopes(ctx: ExecutionContext) {
       const request = ctx.switchToHttp().getRequest<Request>();
 
       const scopes = config.scopes || [];
@@ -54,7 +54,7 @@ export const SerializerInterceptor = (config: {
       return scopes;
     }
 
-    private withQueryScopes(ctx: ExecutionContext, scopes: string[]) {
+    withQueryScopes(ctx: ExecutionContext, scopes: string[]) {
       const request = ctx.switchToHttp().getRequest<Request>();
 
       if (request.query.scopes && config.allowedScopes) {
@@ -66,7 +66,7 @@ export const SerializerInterceptor = (config: {
       return scopes;
     }
 
-    private withSecretScopes(ctx: ExecutionContext, scopes: string[]) {
+    withSecretScopes(ctx: ExecutionContext, scopes: string[]) {
       const request = ctx.switchToHttp().getRequest<Request>();
 
       if (request.query.secret === 'true') {
