@@ -2,7 +2,7 @@ import { NestInterceptor, ExecutionContext, CallHandler, Injectable } from '@nes
 import { map } from 'rxjs/operators';
 import { Request } from 'express';
 import { SerializerService } from './service';
-import { intersection } from 'lodash';
+import { intersection, uniq } from 'lodash';
 import { SerializerRequest } from './types';
 
 export const SerializerInterceptor = (config: {
@@ -20,7 +20,7 @@ export const SerializerInterceptor = (config: {
     intercept(ctx: ExecutionContext, next: CallHandler<Promise<any>>) {
       const request = ctx.switchToHttp().getRequest<SerializerRequest>();
 
-      request.scopes = this.getScopes(ctx);
+      request.scopes = this.withQueryScopes(ctx, this.withSecretScopes(ctx, this.getScopes(ctx)));
 
       return next.handle().pipe(
         map(async (responsePromise) => {
@@ -38,26 +38,44 @@ export const SerializerInterceptor = (config: {
       );
     }
 
-    getScopes(ctx: ExecutionContext) {
+    private getScopes(ctx: ExecutionContext) {
       const request = ctx.switchToHttp().getRequest<Request>();
 
+      const scopes = config.scopes || [];
+
       if (request.query.limited === 'true') {
-        return config.limitedScopes || this.serializerService.config.globalLimitedScopes || config.scopes;
+        return config.limitedScopes || this.serializerService.config.globalLimitedScopes || scopes;
       }
 
       if (request.query.extended === 'true') {
-        return config.extendedScopes || config.scopes;
+        return config.extendedScopes || scopes;
       }
 
-      if (request.query.secret === 'true') {
-        return config.secretScopes || this.serializerService.config.globalSecretScopes || config.scopes;
-      }
+      return scopes;
+    }
+
+    private withQueryScopes(ctx: ExecutionContext, scopes: string[]) {
+      const request = ctx.switchToHttp().getRequest<Request>();
 
       if (request.query.scopes && config.allowedScopes) {
-        return intersection(request.query.scopes as string[], config.allowedScopes);
+        const queryScopes = intersection(request.query.scopes as string[], config.allowedScopes);
+
+        return uniq([...scopes, ...queryScopes]);
       }
 
-      return config.scopes;
+      return scopes;
+    }
+
+    private withSecretScopes(ctx: ExecutionContext, scopes: string[]) {
+      const request = ctx.switchToHttp().getRequest<Request>();
+
+      if (request.query.secret === 'true') {
+        const secretScopes = config.secretScopes || this.serializerService.config.globalSecretScopes || [];
+
+        return uniq([...scopes, ...secretScopes]);
+      }
+
+      return scopes;
     }
   }
 
