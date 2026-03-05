@@ -145,9 +145,7 @@ import { AppController } from './controller';
 @Module({
   imports: [
     LoggerModule,
-    SerializerModule.register({
-      globalEntityNames: [Model.name],
-    }),
+    SerializerModule,
   ],
   controllers: [AppController],
 })

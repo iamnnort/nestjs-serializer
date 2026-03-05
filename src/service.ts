@@ -81,14 +81,10 @@ export class SerializerService {
     }
 
     const serializerFieldConfigs = global.serializerFieldConfigs.filter((fieldConfig) => {
-      const isTarget = fieldConfig.target === entity.constructor;
+      const isTarget = entity instanceof fieldConfig.target;
 
       if (!isTarget) {
-        const isGlobalTarget = (this.config.globalEntityNames || []).includes(fieldConfig.target.name);
-
-        if (!isGlobalTarget) {
-          return false;
-        }
+        return false;
       }
 
       const isScope = fieldConfig.scopes.some((scope) => {
