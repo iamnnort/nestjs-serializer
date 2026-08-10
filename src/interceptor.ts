@@ -83,4 +83,4 @@ export const SerializerInterceptor = (config: {
 };
 
 @Injectable()
-export class SerializerIdInterceptor extends SerializerInterceptor({ fields: ['id'] }) {}
+export class SerializerIdInterceptor extends SerializerInterceptor({ fields: ['id', 'uuid'] }) {}
