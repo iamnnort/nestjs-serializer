@@ -1,8 +1,9 @@
-import { SerializeField, SerializeRelation } from '../src';
+import { SerializeEntity, SerializeField, SerializeRelation } from '../src';
 import { City } from './city';
 import { Model } from './model';
 import { Scopes } from './types';
 
+@SerializeEntity('user')
 export class User extends Model {
   @SerializeField([{ scopes: [Scopes.FULL] }])
   name: string;

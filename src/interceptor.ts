@@ -12,6 +12,7 @@ export const SerializerInterceptor = (config: {
   secretScopes?: string[];
   allowedScopes?: string[];
   fields?: string[];
+  cache?: boolean | number;
 }) => {
   @Injectable()
   class SerializerInterceptor implements NestInterceptor {
@@ -33,6 +34,7 @@ export const SerializerInterceptor = (config: {
           return this.serializerService.transform(response, {
             scopes: request.scopes,
             fields: config.fields,
+            cache: config.cache,
           });
         }),
       );
