@@ -172,11 +172,17 @@ export class SerializerService {
     return transformedEntity;
   }
 
-  getRelations(scopes: string[], relationMap: Record<string, string[]>) {
+  getRelations(scopes: string[], relationMap: Record<string, string[] | (() => string[])>) {
     return uniq(
       flattenDeep<string>(
         scopes.map((scope) => {
-          return relationMap[scope] || [];
+          const relations = relationMap[scope] || [];
+
+          if (isFunction(relations)) {
+            return relations();
+          }
+
+          return relations;
         }),
       ),
     );
